@@ -1,5 +1,7 @@
 # VulNScan
 
+Note: This only works in a Linux machine with Metasploitable Framework
+
 ## Features
 - Scan multiple IP addresses for open ports and vulnerabilities.
 - Display results within the application window.
@@ -15,8 +17,8 @@
 
 1. Clone this repository:
    ```bash
-   git clone <repository_url>
-   cd <repository_name>
+   git clone https://github.com/sftp-nik/VulNScan/
+   cd VulNScan
    ```
 
 2. Install the required Python packages:
@@ -33,7 +35,7 @@
 
 1. Run the script:
    ```bash
-   python vulnerability_scanner.py
+   main.py
    ```
 
 2. Enter the IP addresses to scan, separated by commas (e.g., `192.168.1.1, 192.168.1.2`).
