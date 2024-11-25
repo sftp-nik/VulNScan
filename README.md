@@ -47,3 +47,4 @@ After the scan completes, the results will be displayed within the application w
 
 - Make sure you have the necessary permissions to run `nmap` on the network.
 - Scanning a network without authorization is illegal.
+- 
