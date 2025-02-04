@@ -11,8 +11,7 @@ from email.mime.text import MIMEText
 import logging
 import matplotlib.pyplot as plt
 
-# Setup logging
-logging.basicConfig(filename='vulnerability_scanner.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='vulnerability_scanner.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')   #logging setup
 
 class VulnerabilityScanner:
     def __init__(self):
@@ -21,38 +20,38 @@ class VulnerabilityScanner:
         self.window.geometry("600x600")
         self.window.configure(bg="#f0f0f0")
 
-        # Main frame
+        #main
         self.main_frame = tk.Frame(self.window, bg="#f0f0f0", padx=10, pady=10)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Title 
+        # gen title
         self.title_label = tk.Label(self.main_frame, text="Vulnerability Scanner", font=("Arial", 16, "bold"), bg="#f0f0f0")
         self.title_label.pack(pady=(0, 10))
 
-        # IP add input
+        # IP input
         self.ip_label = tk.Label(self.main_frame, text="Enter IP Addresses (comma separated):", bg="#f0f0f0")
         self.ip_label.pack()
         self.ip_entry = tk.Entry(self.main_frame, width=50)
         self.ip_entry.pack(pady=(0, 10))
 
-        # Scan option input
+        # scan output
         self.scan_options_label = tk.Label(self.main_frame, text="Nmap Scan Options:", bg="#f0f0f0")
         self.scan_options_label.pack()
         self.scan_options_entry = tk.Entry(self.main_frame, width=50)
         self.scan_options_entry.pack(pady=(0, 10))
         self.scan_options_entry.insert(0, "-T4 -p- --script vuln")  # Default 
 
-        # Email notification 
+        # email notf.
         self.email_label = tk.Label(self.main_frame, text="Email for notifications (optional):", bg="#f0f0f0")
         self.email_label.pack()
         self.email_entry = tk.Entry(self.main_frame, width=50)
         self.email_entry.pack(pady=(0, 10))
 
-        # Scan button
+        # scan  btn
         self.scan_button = tk.Button(self.main_frame, text="Scan", command=self.scan, bg="#007acc", fg="white", font=("Arial", 12))
         self.scan_button.pack(pady=(10, 20))
 
-        # Output textbox
+        # output box
         self.output_frame = tk.Frame(self.main_frame, bg="#f0f0f0")
         self.output_frame.pack()
 
@@ -64,11 +63,11 @@ class VulnerabilityScanner:
 
         self.output_text.config(yscrollcommand=self.scrollbar.set)
 
-        # Progress Bar
+        # progress bar
         self.progress = ttk.Progressbar(self.main_frame, orient="horizontal", length=300, mode="determinate")
         self.progress.pack(pady=(10, 10))
 
-        # Status Label
+        # status bar
         self.status_label = tk.Label(self.main_frame, text="Status: Idle", bg="#f0f0f0", font=("Arial", 10))
         self.status_label.pack(pady=(10, 0))
 
@@ -160,7 +159,7 @@ class VulnerabilityScanner:
         ip_addresses = self.ip_entry.get().split(',')
         scan_options = self.scan_options_entry.get()
 
-        # Validate IP addresses
+        # IP addd. validation alg.
         for ip in ip_addresses:
             if not self.is_valid_ip(ip.strip()):
                 messagebox.showerror("Error", f"Invalid IP address: {ip.strip()}")
@@ -185,7 +184,7 @@ class VulnerabilityScanner:
         for thread in threads:
             thread.join()
 
-        # Send email not. (Optional)
+        # Send email notf. (Optional)
         self.send_email_notification("Vulnerability Scan Results", self.output_text.get(1.0, tk.END))
 
         # Export results into an excel file
@@ -235,3 +234,6 @@ class VulnerabilityScanner:
 if __name__ == "__main__":
     scanner = VulnerabilityScanner()
     scanner.run()
+
+
+# Nik
