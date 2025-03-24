@@ -17,7 +17,7 @@ class VulnerabilityScanner:
     def __init__(self, master):
         self.master = master
         self.master.title("Nmap Vulnerability Scanner")
-        self.master.geometry("500x400")
+        self.master.geometry("500x450")
         
         Label(master, text="Enter Target IP:").pack()
         self.target_entry = Entry(master)
@@ -25,6 +25,10 @@ class VulnerabilityScanner:
         
         self.scan_button = Button(master, text="Scan", command=self.start_scan)
         self.scan_button.pack()
+        
+        self.skip_email_var = IntVar()
+        self.skip_email_check = Checkbutton(master, text="Skip Email Report", variable=self.skip_email_var)
+        self.skip_email_check.pack()
         
         self.progress = ttk.Progressbar(master, orient=HORIZONTAL, length=300, mode='determinate')
         self.progress.pack()
@@ -44,19 +48,26 @@ class VulnerabilityScanner:
     def scan_target(self, target):
         logging.info(f"Starting scan on {target}")
         nm = nmap.PortScanner()
-        nm.scan(target, arguments="-sV --script=vuln")
+        self.progress["value"] = 20
+        self.master.update_idletasks()
         
+        nm.scan(target, arguments="-sV --script=vuln")
         self.progress["value"] = 50  # Update progress
         self.master.update_idletasks()
         
         result = self.parse_nmap_results(nm, target)
         
-        self.progress["value"] = 100  # Final progress
+        self.progress["value"] = 75  # Update progress
         self.master.update_idletasks()
         
         self.result_text.insert(END, result + "\n")
         self.export_to_excel(target, result)
-        self.send_email_report(target, result)
+        
+        if not self.skip_email_var.get():
+            self.send_email_report(target, result)
+        
+        self.progress["value"] = 100  # Final progress
+        self.master.update_idletasks()
     
     def parse_nmap_results(self, nm, target):
         logging.info(f"Parsing scan results for {target}")
@@ -67,6 +78,11 @@ class VulnerabilityScanner:
                     state = nm[host]['tcp'][port]['state']
                     service = nm[host]['tcp'][port]['name']
                     report += f"Port: {port}, State: {state}, Service: {service}\n"
+                    
+                    # Extract vulnerabilities if available
+                    if 'script' in nm[host]['tcp'][port]:
+                        for script, output in nm[host]['tcp'][port]['script'].items():
+                            report += f"  - {script}: {output}\n"
             return report
         except Exception as e:
             logging.error(f"Error parsing results: {e}")
@@ -77,12 +93,16 @@ class VulnerabilityScanner:
         try:
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.append(["Port", "State", "Service"])
+            ws.append(["Port", "State", "Service", "Vulnerability Info"])
             
             for line in result.strip().split("\n"):
                 if line.startswith("Port"):
                     parts = line.split(", ")
-                    ws.append([parts[0].split(": ")[1], parts[1].split(": ")[1], parts[2].split(": ")[1]])
+                    port = parts[0].split(": ")[1]
+                    state = parts[1].split(": ")[1]
+                    service = parts[2].split(": ")[1]
+                    vuln_info = "; ".join([l.strip() for l in result.strip().split("\n") if "- " in l])
+                    ws.append([port, state, service, vuln_info])
             
             file_name = f"scan_results_{target}.xlsx"
             wb.save(file_name)
