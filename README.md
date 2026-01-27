@@ -28,8 +28,6 @@ Note: This only works in a Linux machine with Metasploitable Framework
 
 3. Install `nmap` (if not already installed). Instructions vary by OS:
    - **Linux**: `sudo apt-get install nmap`
-   - **macOS**: `brew install nmap`
-   - **Windows**: Download and install from the [nmap website](https://nmap.org/download.html).
 
 ## Usage
 
