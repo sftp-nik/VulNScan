@@ -26,7 +26,7 @@ Note: This only works in a Linux machine with Metasploitable Framework
    pip install python-nmap xlsxwriter
    ```
 
-3. Install `nmap` (if not already installed). Instructions vary by OS:
+3. Install `nmap` (if not already installed). 
    - **Linux**: `sudo apt-get install nmap`
 
 ## Usage
